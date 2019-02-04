@@ -20,6 +20,6 @@ php createTensouFile.php
 ```bash
 php setTensou.php
 ```
-'tensoulist.csv'からデータを読み込み、転送設定をします
+`tensoulist.csv`からデータを読み込み、転送設定をします
 
 すでに設定済みの転送設定はスキップします
