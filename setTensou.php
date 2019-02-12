@@ -3,12 +3,20 @@ require_once './vendor/autoload.php';
 require_once './functions.php';
 $config = require_once './config.php';
 
-use Facebook\WebDriver\Chrome\ChromeDriver;
+use Facebook\WebDriver;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Chrome\ChromeDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 
+$options = new ChromeOptions();
+// $options->addArguments(['--headless']);
+$caps = DesiredCapabilities::chrome();
+$caps->setCapability(ChromeOptions::CAPABILITY, $options);
 
 setup(); // セットアップ
-$driver = ChromeDriver::start(); // ブラウザ起動
+$driver = ChromeDriver::start($caps);
 login($driver); // ログイン
 $data = readCSV('tensoulist.csv'); // データの読み込み
 
@@ -34,6 +42,7 @@ foreach ($data as $field) {
         // 転送設定ページに飛ぶ
         $driver->findElement(WebDriverBy::xpath('//input[contains(@value,"'.$from.'")]/following-sibling::input[contains(@value,"転送")][1]'))->click();
         $last_from = $from;
+        print("setting ${from}...\n");
     }
     $email_list = readTensousakiList($driver);
     if(!in_array($to, $email_list)){

@@ -3,12 +3,20 @@ require_once './vendor/autoload.php';
 require_once './functions.php';
 $config = require_once './config.php';
 
-use Facebook\WebDriver\Chrome\ChromeDriver;
+use Facebook\WebDriver;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Chrome\ChromeDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 
+$options = new ChromeOptions();
+// $options->addArguments(['--headless']);
+$caps = DesiredCapabilities::chrome();
+$caps->setCapability(ChromeOptions::CAPABILITY, $options);
 
 setup(); // セットアップ
-$driver = ChromeDriver::start(); // ブラウザ起動
+$driver = ChromeDriver::start($caps);
 login($driver); // ログイン
 
 $server = $config['server'];
@@ -39,6 +47,7 @@ foreach ($server as $domain => $value) {
                 array_push($tensoulist, array($from,$to));
             }
         }
+        print("reading ${from}...\n");
     }
 }
 
